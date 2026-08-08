@@ -1,1 +1,140 @@
-<!-- app/templates/qa.html — Q&A interface (to be implemented) -->
+{% extends "base.html" %}
+
+{% block title %}Ask about Patient {{ subject_id }} — PatientTrace{% endblock %}
+
+{% block content %}
+
+<!-- Header -->
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h3 class="text-primary mb-1">Structured Question Panel</h3>
+        <p class="text-muted small mb-0">Patient ID: <strong>{{ subject_id }}</strong></p>
+    </div>
+    <div>
+        <a href="{{ url_for('main.patient_timeline', subject_id=subject_id) }}" class="btn btn-outline-secondary">
+            &larr; Back to Timeline
+        </a>
+    </div>
+</div>
+
+{% if not result %}
+<!-- Initial Question Selection Panel (GET Request) (UI_UX.md Section 3.4) -->
+<div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h5 class="mb-0 fw-bold">Select a Question to Query Database</h5>
+        <p class="text-muted small mb-0 mt-1">
+            Questions are executed as auditable, deterministic SQL queries against the local MIMIC-IV database. No LLM generation is involved.
+        </p>
+    </div>
+    <div class="card-body">
+        <form action="{{ url_for('main.submit_question', subject_id=subject_id) }}" method="POST">
+            <div class="list-group mb-4">
+                {% for q in supported_questions %}
+                <label class="list-group-item list-group-item-action d-flex align-items-center py-3 cursor-pointer">
+                    <input class="form-check-input me-3" type="radio" name="question_id" value="{{ q.question_id }}" {% if loop.first %}checked{% endif %}>
+                    <div>
+                        <div class="fw-bold text-dark fs-6">{{ q.text }}</div>
+                        <span class="text-muted small">Query ID: <code>{{ q.question_id }}</code></span>
+                    </div>
+                </label>
+                {% endfor %}
+            </div>
+
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button type="submit" class="btn btn-primary btn-lg px-4">
+                    🔍 Submit Question
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+{% else %}
+<!-- Answer State (POST Result) (UI_UX.md Section 3.4 & Section 4) -->
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white py-3">
+        <h5 class="mb-0 fw-bold">Q: {{ question_text }}</h5>
+    </div>
+    <div class="card-body">
+
+        {% if result.insufficient_evidence %}
+            <!-- Insufficient Evidence State (Neutral Gray/Blue ⚪ - NOT RED, NO X ICON) (UI_UX.md Section 4) -->
+            <div class="alert state-insufficient border p-4 mb-4 rounded">
+                <div class="d-flex align-items-center mb-2">
+                    <span class="fs-3 me-2">⚪</span>
+                    <h5 class="mb-0 fw-bold">Insufficient Evidence — No Supporting Records Found</h5>
+                </div>
+                <p class="mb-0 fs-6">
+                    {{ result.answer_text }}
+                </p>
+                <hr class="my-3">
+                <p class="text-muted small mb-0">
+                    ℹ️ This is a verified, deterministic query result confirming no matching records exist in the database for this patient.
+                </p>
+            </div>
+
+        {% else %}
+            <!-- Data Found State (Green ✅) (UI_UX.md Section 4) -->
+            <div class="alert state-success border p-3 mb-4 rounded d-flex align-items-center">
+                <span class="fs-3 me-2">✅</span>
+                <div>
+                    <h5 class="mb-0 fw-bold">{{ result.answer_text }}</h5>
+                    <span class="small">All facts are backed by explicit database citations below.</span>
+                </div>
+            </div>
+
+            <!-- Supporting Data Rows Table -->
+            {% if result.rows %}
+            <h6 class="fw-bold mb-3">Supporting Data Records:</h6>
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered table-hover align-middle">
+                    <thead class="table-secondary">
+                        <tr>
+                            {% for key in result.rows[0].keys() %}
+                            <th class="text-capitalize">{{ key.replace('_', ' ') }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in result.rows %}
+                        <tr>
+                            {% for val in row.values() %}
+                            <td>{{ val }}</td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% endif %}
+
+            <!-- Explicit Citations Section -->
+            {% if result.citations %}
+            <div class="bg-light border rounded p-3 mb-4">
+                <h6 class="fw-bold text-secondary mb-2">Source Database Citations:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                    {% for cit in result.citations %}
+                    <span class="citation-tag">
+                        [source: {{ cit.table }}, {{ cit.row_id }}]
+                    </span>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+
+        {% endif %}
+
+        <!-- Ask Another Question Button -->
+        <div class="mt-4">
+            <a href="{{ url_for('main.ask_panel', subject_id=subject_id) }}" class="btn btn-primary px-4">
+                &larr; Ask Another Question
+            </a>
+        </div>
+
+    </div>
+</div>
+
+{% endif %}
+
+{% endblock %}

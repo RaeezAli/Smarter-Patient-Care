@@ -1,1 +1,25 @@
-<!-- app/templates/errors.html — error pages (to be implemented) -->
+{% extends "base.html" %}
+
+{% block title %}Error — PatientTrace{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm border-danger my-4">
+    <div class="card-header bg-danger text-white py-3">
+        <h4 class="mb-0 fw-bold">❌ {{ status_code or 'Error' }} — {{ error_title or 'System Error' }}</h4>
+    </div>
+    <div class="card-body py-4">
+        <div class="alert alert-danger state-error border mb-4">
+            <h5 class="fw-bold mb-2">{{ error_message or 'An unexpected error occurred.' }}</h5>
+            <p class="mb-0 small text-secondary">
+                If you attempted to access a patient ID, please verify the ID exists in the dataset.
+            </p>
+        </div>
+
+        <div class="mt-4">
+            <a href="{{ url_for('main.index') }}" class="btn btn-danger btn-lg px-4">
+                &larr; Return to Patient List
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

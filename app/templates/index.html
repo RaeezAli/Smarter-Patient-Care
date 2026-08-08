@@ -1,1 +1,72 @@
-<!-- app/templates/index.html — patient picker (to be implemented) -->
+{% extends "base.html" %}
+
+{% block title %}Patient Picker — PatientTrace{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-header bg-white py-3">
+        <h4 class="mb-0 text-primary">Select a Patient to View Timeline</h4>
+        <p class="text-muted small mb-0 mt-1">
+            Displaying all patients loaded from the MIMIC-IV Demo dataset. Select a patient to inspect their chronological timeline or perform structured QA.
+        </p>
+    </div>
+    <div class="card-body">
+
+        <!-- Search / Filter Input Box -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <input type="text" id="patientSearchInput" class="form-control" placeholder="Search by Subject ID, Gender, or Age...">
+            </div>
+        </div>
+
+        <!-- Patients Table -->
+        <div class="table-responsive">
+            <table class="table table-hover table-striped align-middle" id="patientsTable">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Subject ID</th>
+                        <th>Gender</th>
+                        <th>Anchor Age</th>
+                        <th class="text-end">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for p in patients %}
+                    <tr>
+                        <td class="fw-bold">{{ p.subject_id }}</td>
+                        <td>
+                            {% if p.gender == 'F' %}
+                                <span class="badge bg-secondary">Female (F)</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Male (M)</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ p.anchor_age }} years</td>
+                        <td class="text-end">
+                            <a href="{{ url_for('main.patient_timeline', subject_id=p.subject_id) }}" class="btn btn-sm btn-primary">
+                                View Timeline &rarr;
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    // Simple client-side search filter for patient table
+    document.getElementById('patientSearchInput').addEventListener('keyup', function() {
+        let filter = this.value.toLowerCase();
+        let rows = document.querySelectorAll('#patientsTable tbody tr');
+        rows.forEach(row => {
+            let text = row.textContent.toLowerCase();
+            row.style.display = text.includes(filter) ? '' : 'none';
+        });
+    });
+</script>
+{% endblock %}

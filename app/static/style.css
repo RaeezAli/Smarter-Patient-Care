@@ -1,1 +1,68 @@
-/* app/static/style.css — application styles (to be implemented) */
+/* app/static/style.css — Custom styles & color legends for Smarter Patient Care / PatientTrace */
+
+/* Persistent Safety Banner */
+.safety-banner {
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    border-left: 5px solid #ffc107;
+}
+
+/* Citation Tag Styling (UI_UX.md Section 3.3 & Section 4) */
+.citation-tag {
+    font-family: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    font-size: 0.825rem;
+    color: #6c757d;
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+/* Timeline Cards and Badges */
+.timeline-card {
+    border-left: 4px solid #0d6efd;
+    margin-bottom: 1rem;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.timeline-badge-admission  { background-color: #0d6efd; color: #fff; } /* Blue */
+.timeline-badge-transfer   { background-color: #fd7e14; color: #fff; } /* Orange */
+.timeline-badge-lab        { background-color: #6f42c1; color: #fff; } /* Purple */
+.timeline-badge-medication { background-color: #198754; color: #fff; } /* Green */
+.timeline-badge-diagnosis  { background-color: #6c757d; color: #fff; } /* Gray */
+.timeline-badge-procedure  { background-color: #20c997; color: #fff; } /* Teal */
+.timeline-badge-vital      { background-color: #dc3545; color: #fff; } /* Red */
+
+/* 4-State Color Legend (UI_UX.md Section 4) */
+.state-success {
+    background-color: #d1e7dd;
+    border-color: #badbcc;
+    color: #0f5132;
+}
+
+.state-insufficient {
+    background-color: #e2e3e5;
+    border-color: #d3d6d8;
+    color: #41464b;
+}
+
+.state-error {
+    background-color: #f8d7da;
+    border-color: #f5c2c7;
+    color: #842029;
+}
+
+.state-warning {
+    background-color: #fff3cd;
+    border-color: #ffecb5;
+    color: #664d03;
+}
+
+/* Abnormal Lab Flag Badge */
+.badge-abnormal {
+    background-color: #ffc107;
+    color: #000;
+    font-weight: bold;
+}

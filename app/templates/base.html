@@ -1,1 +1,47 @@
-<!-- app/templates/base.html — base Jinja2 template (to be implemented) -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}PatientTrace — Clinical Timeline & QA{% endblock %}</title>
+    <!-- Bootstrap 5 CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom Application CSS -->
+    <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+    <!-- Top Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{{ url_for('main.index') }}">
+                📋 PatientTrace
+            </a>
+            <div class="navbar-nav ms-auto">
+                <a class="nav-link {% if request.endpoint == 'main.index' %}active{% endif %}" href="{{ url_for('main.index') }}">Home</a>
+                <a class="nav-link {% if request.endpoint == 'main.about' %}active{% endif %}" href="{{ url_for('main.about') }}">About</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Persistent Safety Banner (UI_UX.md Section 3.1) -->
+    <div class="container mt-3">
+        <div class="alert alert-warning safety-banner d-flex align-items-center shadow-sm mb-4" role="alert">
+            <span class="fs-4 me-2">⚠️</span>
+            <div>
+                <strong>Research and educational prototype only. Not for clinical use.</strong>
+                Do not use for diagnosis, treatment, triage, or emergency decisions.
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Page Content -->
+    <main class="container pb-5">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

@@ -1,1 +1,69 @@
-<!-- app/templates/about.html — about page (to be implemented) -->
+{% extends "base.html" %}
+
+{% block title %}About & Safety Statement — PatientTrace{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-dark text-white py-3">
+        <h3 class="mb-0 fw-bold">About PatientTrace</h3>
+    </div>
+    <div class="card-body">
+
+        <!-- 1. Full Safety Notice (UI_UX.md Section 3.5) -->
+        <div class="alert alert-warning p-4 mb-4 border-start border-4 border-warning shadow-sm">
+            <h4 class="fw-bold text-dark mb-2">⚠️ Safety Statement & Clinical Use Disclaimer</h4>
+            <p class="fs-6 mb-0 text-dark">
+                This application is a <strong>research and educational prototype only</strong> developed for hackathon demonstration purposes. 
+                It is <strong>NOT intended for clinical use</strong>, diagnosis, medical decision-making, triage, treatment planning, or emergency decisions. 
+                All dataset timestamps have been randomly date-shifted per patient as part of the PhysioNet de-identification protocol.
+            </p>
+        </div>
+
+        <!-- 2. What this tool does -->
+        <div class="mb-4">
+            <h4 class="text-primary border-bottom pb-2">What This Tool Does</h4>
+            <p class="fs-6">
+                PatientTrace is a deterministic clinical data exploration tool built on the MIMIC-IV Clinical Database Demo dataset. 
+                It extracts and constructs structured patient timelines and answers targeted clinical history questions directly from relational SQLite database tables. 
+                Every presented fact is bound to an explicit database citation tag indicating the source table and primary/composite row identifier.
+            </p>
+        </div>
+
+        <!-- 3. What this tool DOES NOT do -->
+        <div class="mb-4">
+            <h4 class="text-danger border-bottom pb-2">What This Tool Does NOT Do</h4>
+            <ul class="fs-6">
+                <li><strong>No LLM Generative Answering:</strong> Does not use Large Language Models (LLMs) or generative AI APIs for question answering, eliminating hallucination risks.</li>
+                <li><strong>No Clinical Diagnostics:</strong> Does not infer diagnoses, treatment recommendations, or risk scores.</li>
+                <li><strong>No Uncited Outputs:</strong> Does not display any event or record without attached primary data source citations.</li>
+                <li><strong>No Calendar Chronology:</strong> Does not reflect real calendar dates (all dates are shifted per patient).</li>
+            </ul>
+        </div>
+
+        <!-- 4. Data Source -->
+        <div class="mb-4">
+            <h4 class="text-secondary border-bottom pb-2">Data Source & License</h4>
+            <p class="fs-6 mb-1">
+                Data is sourced from the <strong>MIMIC-IV Clinical Database Demo v2.2</strong> (PhysioNet).
+            </p>
+            <p class="text-muted small mb-0">
+                Reference: <a href="https://physionet.org/content/mimic-iv-demo/2.2/" target="_blank">PhysioNet MIMIC-IV Demo v2.2</a>. 
+                Data contains hospital-wide (`hosp`) and intensive care unit (`icu`) modules across 100 de-identified patient stays.
+            </p>
+        </div>
+
+        <!-- 5. Evaluation Report & Deliverables -->
+        <div class="mb-3">
+            <h4 class="text-dark border-bottom pb-2">Project Deliverables</h4>
+            <p class="fs-6">
+                For complete methodology, safety evaluation, and fact-checking validation results, refer to the project documentation:
+            </p>
+            <ul>
+                <li><code>docs/evaluation_report.md</code></li>
+                <li><code>docs/safety_statement.md</code></li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+{% endblock %}
