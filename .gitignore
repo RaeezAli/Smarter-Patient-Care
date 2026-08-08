@@ -1,0 +1,6 @@
+venv/
+data/raw/
+data/mimic.db
+__pycache__/
+.env
+*.pyc
